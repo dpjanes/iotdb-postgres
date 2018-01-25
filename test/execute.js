@@ -1,9 +1,9 @@
 /**
- *  test/initialize.js
+ *  test/execute.js
  *
  *  David Janes
  *  IOTDB
- *  2018-01-24
+ *  2018-01-25
  *
  *  Copyright [2013-2018] [David P. Janes]
  *
@@ -29,7 +29,7 @@ const assert = require("assert");
 const postgres = require("..")
 const _util = require("./_util")
 
-describe("initialize", function() {
+describe("execute", function() {
     let self = {}
 
     before(function(done) {
@@ -46,8 +46,14 @@ describe("initialize", function() {
     describe("good", function() {
         it("works", function(done) {
             _.promise.make(self)
+                .then(_.promise.optional(postgres.execute.p("DROP TABLE items")))
+                .then(postgres.execute.p("CREATE TABLE items(id SERIAL PRIMARY KEY, text VARCHAR(40) not null, complete BOOLEAN)"))
+                .then(postgres.execute.p("INSERT INTO items(text, complete) values($1, $2)", [ "hello", true ]))
+                .then(postgres.execute.p("SELECT * FROM items"))
                 .then(_.promise.make(sd => {
-                    assert.ok(sd.postgres)
+                    assert.ok(sd.rows)
+                    assert.deepEqual(sd.rows.length, 1)
+                    assert.deepEqual(sd.count, 1)
                 }))
                 .then(_.promise.done(done))
                 .catch(done)
