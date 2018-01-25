@@ -1,12 +1,12 @@
 {
     "name": "items",
-    "indexes": [
+    "keys": [
         "id"
     ],
     "columns": [
         {
             "name": "id",
-            "type": "SERIAL PRIMARY KEY"
+            "type": "SERIAL"
         },
         {
             "name": "text",
