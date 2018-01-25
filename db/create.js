@@ -30,7 +30,7 @@ const assert = require("assert");
 
 /*
  *  Requires: self.postgres, self.table_schema
- *  Produces: N/A
+ *  Produces: self.postgres_result
  *
  *  Create a Postgres Table
  */
@@ -38,13 +38,14 @@ const create = _.promise.make((self, done) => {
     const method = "create";
 
     assert.ok(self.postgres, `${method}: expected self.postgres`)
-    assert.ok(self.statement, `${method}: expected self.statement`)
+    assert.ok(self.table_schema, `${method}: expected self.table_schema`)
 
-    self.postgres.query(self.statement, self.params)
+    const columns = (self.table_schema.columns || []).map(cd => `${cd.name} ${cd.type}`);
+    const statement = `CREATE TABLE ${self.table_schema.name}(${columns.join(", ")})`;
+
+    self.postgres.query(statement)
         .then(result => {
             self.postgres_result = result;
-            self.rows = result.rows;
-            self.count = result.rowCount;
 
             done(null, self)
         })

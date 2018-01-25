@@ -1,0 +1,20 @@
+{
+    "name": "items",
+    "indexes": [
+        "id"
+    ],
+    "columns": [
+        {
+            "name": "id",
+            "type": "SERIAL PRIMARY KEY"
+        },
+        {
+            "name": "text",
+            "type": "VARCHAR(40) NOT NULL"
+        },
+        {
+            "name": "complete",
+            "type": "BOOLEAN"
+        }
+    ]
+}
