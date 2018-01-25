@@ -3,7 +3,7 @@
  *
  *  David Janes
  *  IOTDB.org
- *  2018-01-24
+ *  2018-01-25
  *
  *  Copyright [2013-2018] [David P. Janes]
  *
@@ -22,6 +22,9 @@
 
 "use strict";
 
-module.exports = require("./lib");
-module.exports.db = require("./db");
-module.exports.dynamodb = module.exports.db;
+module.exports = Object.assign(
+    {},
+    require("./initialize"),
+    require("./create"),
+    {}
+)

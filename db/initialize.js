@@ -1,9 +1,9 @@
 /*
- *  index.js
+ *  initialize.js
  *
  *  David Janes
  *  IOTDB.org
- *  2018-01-24
+ *  2018-01-25
  *
  *  Copyright [2013-2018] [David P. Janes]
  *
@@ -22,6 +22,22 @@
 
 "use strict";
 
-module.exports = require("./lib");
-module.exports.db = require("./db");
-module.exports.dynamodb = module.exports.db;
+const _ = require("iotdb-helpers");
+
+const postgres = require("pg");
+
+const assert = require("assert");
+
+/**
+ *  Currently does nothing, but call me anyway
+ */
+const initialize = _.promise.make((self, done) => {
+    const method = "initialize";
+
+    done(null, self)
+})
+
+/**
+ *  API
+ */
+exports.initialize = initialize;
