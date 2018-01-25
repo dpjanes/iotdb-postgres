@@ -1,0 +1,27 @@
+{
+    "author": "David P. Janes <davidjanes@iotdb.org> (https://iotdb.org)", 
+    "bugs": {
+        "url": "https://github.com/dpjanes/iotdb-postgres/issues"
+    }, 
+    "dependencies": {
+        "iotdb-helpers": "~3.2.3", 
+        "postgres": "~2.15.0"
+    }, 
+    "description": "Pipe Oriented Programming", 
+    "devDependencies": {
+    }, 
+    "homepage": "https://github.com/dpjanes/node-iotdb", 
+    "license": "Apache-2.0", 
+    "main": "index.js", 
+    "name": "iotdb-postgres", 
+    "private": false, 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/dpjanes/iotdb-postgres"
+    }, 
+    "scripts": {
+        "cover": "nyc --reporter=html mocha --recursive", 
+        "test": "mocha --recursive --bail"
+    }, 
+    "version": "1.0.0"
+}
