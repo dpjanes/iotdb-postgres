@@ -1,0 +1,70 @@
+{
+    "name": "_0001$place_mine",
+    "keys": [
+        "id"
+    ],
+    "columns": [
+        {
+            "name": "id",
+            "type": "char(44)"
+        },
+        {
+            "name": "id$url",
+            "type": "text"
+        },
+        {
+            "name": "timestamp",
+            "type": "timestamp"
+        },
+        {
+            "name": "correction",
+            "type": "text",
+            "data_type": "schema:Text"
+        },
+        {
+            "name": "branch_code",
+            "type": "text",
+            "data_type": "schema:Text"
+        },
+        {
+            "name": "name",
+            "type": "text",
+            "data_type": "schema:Text"
+        },
+        {
+            "name": "is_certified",
+            "type": "boolean",
+            "data_type": "schema:Boolean"
+        },
+        {
+            "name": "is_active",
+            "type": "boolean",
+            "data_type": "schema:Boolean"
+        },
+        {
+            "name": "mining_method",
+            "type": "text",
+            "data_type": "schema:Text"
+        },
+        {
+            "name": "address$address_region",
+            "type": "text",
+            "data_type": "schema:Text"
+        },
+        {
+            "name": "address$address_country",
+            "type": "text",
+            "data_type": "schema:Text"
+        },
+        {
+            "name": "geo$latitude",
+            "type": "float",
+            "data_type": "schema:Number"
+        },
+        {
+            "name": "geo$longitude",
+            "type": "float",
+            "data_type": "schema:Number"
+        }
+    ]
+}
