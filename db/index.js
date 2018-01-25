@@ -1,5 +1,5 @@
 /*
- *  index.js
+ *  db/index.js
  *
  *  David Janes
  *  IOTDB.org
@@ -26,5 +26,6 @@ module.exports = Object.assign(
     {},
     require("./initialize"),
     require("./create"),
+    require("./drop"),
     {}
 )

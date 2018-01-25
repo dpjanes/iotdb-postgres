@@ -1,5 +1,5 @@
 /*
- *  initialize.js
+ *  db/initialize.js
  *
  *  David Janes
  *  IOTDB.org

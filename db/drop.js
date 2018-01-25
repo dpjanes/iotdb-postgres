@@ -1,5 +1,5 @@
 /*
- *  db/create.js
+ *  db/drop.js
  *
  *  David Janes
  *  IOTDB.org
@@ -32,22 +32,16 @@ const assert = require("assert");
  *  Requires: self.postgres, self.table_schema
  *  Produces: self.postgres_result
  *
- *  Create a Postgres Table
+ *  Drop a Postgres Table
  */
-const create = _.promise.make((self, done) => {
-    const method = "create";
+const drop = _.promise.make((self, done) => {
+    const method = "drop";
 
     assert.ok(self.postgres, `${method}: expected self.postgres`)
     assert.ok(self.table_schema, `${method}: expected self.table_schema`)
     assert.ok(self.table_schema.name, `${method}: expected self.table_schema.name`)
-    assert.ok(self.table_schema.keys, `${method}: expected self.table_schema.keys`)
-    assert.ok(self.table_schema.keys.length, `${method}: expected self.table_schema.keys`)
 
-    const columns = (self.table_schema.columns || []).map(cd => `${cd.name} ${cd.type}`);
-
-    columns.push(`PRIMARY KEY (${self.table_schema.keys.join(", ")})`)
-
-    const statement = `CREATE TABLE ${self.table_schema.name}(${columns.join(", ")})`;
+    const statement = `DROP TABLE ${self.table_schema.name}`;
 
     self.postgres.query(statement)
         .then(result => {
@@ -61,4 +55,4 @@ const create = _.promise.make((self, done) => {
 /**
  *  API
  */
-exports.create = create;
+exports.drop = drop;

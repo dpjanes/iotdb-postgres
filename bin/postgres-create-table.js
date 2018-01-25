@@ -30,3 +30,70 @@ const path = require("path");
 
 const postgres = require("..")
 
+const minimist = require('minimist');
+const ad = minimist(process.argv.slice(2), {
+    boolean: [ "verbose", "help", "drop", "error", ],
+});
+
+const help = message => {
+    if (message) {
+        console.log("postgres-create-table:", message)
+        console.log()
+    }
+    console.log("usage: postgres-create-table [options] --db <url> <path>")
+    console.log("")
+    console.log("options:")
+    console.log("  --db postgres://host:port/db  Postgres DB to connect to")
+    console.log("  --drop                        Drop the existing database")
+
+    process.exit(message ? 1 : 0)
+}
+
+if (ad.help) {
+    help()
+} else if (!ad.db) {
+    help("--db postgres://host:port/db required")
+} else if (ad._.length === 0) {
+    help("<path> is required")
+}
+
+const _do_table = _.promise.make((self, done) => {
+    assert.ok(self.path)
+    assert.ok(self.postgres)
+
+    _.promise.make(self)
+        .then(fs.read.json)
+        .then(_.promise.add("json:table_schema"))
+        .then(_.promise.conditional(self.do_drop, postgres.db.drop))
+        .then(postgres.db.create)
+        .then(_.promise.make(sd => {
+            console.log("+", "made", sd.table_schema.name)
+        }))
+        .then(_.promise.done(done, self))
+        .catch(done)
+})
+
+_.promise.make({
+    postgresd: {
+        url: ad.db,
+    },
+    verbose: ad.verbose,
+    do_drop: ad.drop,
+    paths: ad._,
+})
+    .then(postgres.initialize)
+    .then(_.promise.series({
+        method: _do_table,
+        inputs: "paths:path",
+    }))
+    .catch(error => {
+        delete error.self;
+        console.log("#", _.error.message(error))
+
+        if (ad.error) {
+            console.log(error)
+        }
+    })
+    .done(() => {
+        process.nextTick(() => process.exit())
+    })
