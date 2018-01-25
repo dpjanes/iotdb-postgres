@@ -64,7 +64,7 @@ const _do_table = _.promise.make((self, done) => {
     _.promise.make(self)
         .then(fs.read.json)
         .then(_.promise.add("json:table_schema"))
-        .then(_.promise.conditional(self.do_drop, postgres.db.drop))
+        .then(_.promise.conditional(self.do_drop, _.promise.optional(postgres.db.drop)))
         .then(postgres.db.create)
         .then(_.promise.make(sd => {
             console.log("+", "made", sd.table_schema.name)
