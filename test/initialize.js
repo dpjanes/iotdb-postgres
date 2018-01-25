@@ -46,10 +46,10 @@ describe("initialize", function() {
     describe("good", function() {
         it("works", function(done) {
             _.promise.make(self)
-                .then(_.promise.optional(postgres.query.p("DROP TABLE items")))
-                .then(postgres.query.p("CREATE TABLE items(id SERIAL PRIMARY KEY, text VARCHAR(40) not null, complete BOOLEAN)"))
-                .then(postgres.query.p("INSERT INTO items(text, complete) values($1, $2)", [ "hello", true ]))
-                .then(postgres.query.p("SELECT * FROM items"))
+                .then(_.promise.optional(postgres.execute.p("DROP TABLE items")))
+                .then(postgres.execute.p("CREATE TABLE items(id SERIAL PRIMARY KEY, text VARCHAR(40) not null, complete BOOLEAN)"))
+                .then(postgres.execute.p("INSERT INTO items(text, complete) values($1, $2)", [ "hello", true ]))
+                .then(postgres.execute.p("SELECT * FROM items"))
                 .then(_.promise.log("+", "rows"))
                 .then(_.promise.done(done))
                 .catch(done)
