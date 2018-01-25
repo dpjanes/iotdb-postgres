@@ -46,6 +46,8 @@ describe("initialize", function() {
     describe("good", function() {
         it("works", function(done) {
             _.promise.make(self)
+                .then(_.promise.optional(postgres.query.p("DROP TABLE items")))
+                .then(postgres.query.p("CREATE TABLE items(id SERIAL PRIMARY KEY, text VARCHAR(40) not null, complete BOOLEAN)"))
                 .then(_.promise.done(done))
                 .catch(done)
         })
