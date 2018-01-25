@@ -35,7 +35,7 @@ describe("initialize", function() {
     before(function(done) {
         _.promise.make(self)
             .then(_util.initialize)
-            .then(_util.load)
+            // .then(_util.load)
             .then(_.promise.make(sd => {
                 self = sd;
             }))

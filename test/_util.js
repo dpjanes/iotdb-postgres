@@ -43,7 +43,9 @@ const ok_error = (done, code) => error => {
  */
 const initialize = _.promise.make((self, done) => {
     _.promise.make(self)
-        .then(_.promise.add("postgresd", require("./data/postgres.json")))
+        .then(_.promise.add("postgresd", {
+            "url": "postgres://localhost:5432/david",
+        }))
         .then(postgres.initialize)
         .then(_.promise.done(done, self, "postgres"))
         .catch(done)
