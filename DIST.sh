@@ -6,7 +6,6 @@
 #   2018-01-24
 #
 
-exit 0
 PACKAGE=iotdb-postgres
 DIST_ROOT=/var/tmp/.dist.$$
 
