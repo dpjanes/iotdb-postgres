@@ -21,5 +21,5 @@
         "cover": "nyc --reporter=html mocha --recursive", 
         "test": "mocha --recursive --bail"
     }, 
-    "version": "1.0.2"
+    "version": "1.0.3"
 }
