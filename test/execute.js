@@ -51,8 +51,9 @@ describe("execute", function() {
                 .then(postgres.execute.p("INSERT INTO items(text, complete) values($1, $2)", [ "hello", true ]))
                 .then(postgres.execute.p("SELECT * FROM items"))
                 .then(_.promise.make(sd => {
-                    assert.ok(sd.rows)
-                    assert.deepEqual(sd.rows.length, 1)
+                    assert.ok(sd.jsons)
+                    assert.ok(sd.json)
+                    assert.deepEqual(sd.jsons.length, 1)
                     assert.deepEqual(sd.count, 1)
                 }))
                 .then(_.promise.done(done))
