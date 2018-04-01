@@ -38,12 +38,13 @@ const drop = _.promise.make((self, done) => {
     const method = "drop";
 
     assert.ok(self.postgres, `${method}: expected self.postgres`)
+    assert.ok(self.postgres.client, `${method}: expected self.postgres.client`)
     assert.ok(self.table_schema, `${method}: expected self.table_schema`)
     assert.ok(self.table_schema.name, `${method}: expected self.table_schema.name`)
 
     const statement = `DROP TABLE ${self.table_schema.name}`;
 
-    self.postgres.query(statement)
+    self.postgres.client.query(statement)
         .then(result => {
             self.postgres_result = result;
 

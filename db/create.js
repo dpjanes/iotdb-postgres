@@ -38,6 +38,7 @@ const create = _.promise.make((self, done) => {
     const method = "create";
 
     assert.ok(self.postgres, `${method}: expected self.postgres`)
+    assert.ok(self.postgres.client, `${method}: expected self.postgres.client`)
     assert.ok(self.table_schema, `${method}: expected self.table_schema`)
     assert.ok(self.table_schema.name, `${method}: expected self.table_schema.name`)
     assert.ok(self.table_schema.keys, `${method}: expected self.table_schema.keys`)
@@ -49,7 +50,7 @@ const create = _.promise.make((self, done) => {
 
     const statement = `CREATE TABLE ${self.table_schema.name}(${columns.join(", ")})`;
 
-    self.postgres.query(statement)
+    self.postgres.client.query(statement)
         .then(result => {
             self.postgres_result = result;
 
