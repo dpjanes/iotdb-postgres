@@ -34,7 +34,7 @@ const assert = require("assert");
  *
  *  Create a Postgres Table
  */
-const create = _.promise.make((self, done) => {
+const create = dry_run => _.promise.make((self, done) => {
     const method = "create";
 
     assert.ok(self.postgres, `${method}: expected self.postgres`)
@@ -50,6 +50,15 @@ const create = _.promise.make((self, done) => {
 
     const statement = `CREATE TABLE ${self.table_schema.name}(${columns.join(", ")})`;
 
+    self.postgres_statement = statement
+    self.postgres_params = null
+
+    if (dry_run) {
+        self.postgres_result = null
+
+        return done(null, self)
+    }
+
     self.postgres.client.query(statement)
         .then(result => {
             self.postgres_result = result;
@@ -62,4 +71,5 @@ const create = _.promise.make((self, done) => {
 /**
  *  API
  */
-exports.create = create;
+exports.create = create(false);
+exports.create.dry_run = create(true);
