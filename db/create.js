@@ -59,7 +59,7 @@ const _fix = _.promise.make((self, done) => {
 
     self.postgres.client.query(`
 select column_name, data_type, character_maximum_length
-from INFORMATION_SCHEMA.COLUMNS where table_name = 'items';
+from INFORMATION_SCHEMA.COLUMNS where table_name = '${self.table_schema.name}';
 `)
         .then(result => {
             self.rowd = {}
@@ -70,7 +70,9 @@ from INFORMATION_SCHEMA.COLUMNS where table_name = 'items';
 
             let columns = self.table_schema.columns.map(_normalize);
             columns.forEach(column => {
-                if (column._ignore) {
+                /* if (self.table_schema.keys.indexOf(column._name) > -1) {
+                    column._action = null
+                } else */ if (column._ignore) {
                     column._action = null
                 } else if (self.rowd[column.column_name]) {
                     column._action = `ALTER ${column._name} TYPE ${column._type}`
@@ -78,6 +80,9 @@ from INFORMATION_SCHEMA.COLUMNS where table_name = 'items';
                     column._action = `ADD ${column._name} ${column._type}`
                 }
             })
+
+            // console.log("ROWD", result.rows)
+            // console.log("COLUMNS", columns)
 
             columns = columns.filter(column => column._action)
             if (columns.length === 0) {

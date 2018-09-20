@@ -93,5 +93,21 @@ describe("db/create", function() {
                 .then(_.promise.done(done))
                 .catch(done)
         })
+        it("upgrade (complex)", function(done) {
+            _.promise.make(self)
+                .then(_.promise.optional(postgres.execute.p("DROP TABLE items")))
+
+                .then(_.promise.add("path", path.join(__dirname, "..", "data", "place_mine.schema.json")))
+                .then(fs.read.json)
+                .then(_.promise.add("json:table_schema"))
+                .then(postgres.db.create)
+                .then(postgres.db.create)
+
+                .then(_.promise.make(sd => {
+                    // assert.deepEqual(sd.postgres_result.command, "CREATE")
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
     })
 })
