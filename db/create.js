@@ -7,7 +7,7 @@
  *
  *  Copyright [2013-2018] [David P. Janes]
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  Licensed under the Apache License, Version 2.0 (the "License")
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
@@ -20,13 +20,85 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
+const _ = require("iotdb-helpers")
 
-const postgres = require("pg");
+const assert = require("assert")
 
-const assert = require("assert");
+const logger = require("../logger")(__filename)
+
+/**
+ */
+const _normalize = column => {
+    const c = {
+        column_name: column.name,
+        data_type: column.type.replace(/ .*$/, "").toLowerCase(),
+        character_maximum_length: null,
+        _name: column.name,
+        _type: column.type.replace(/ .*$/, ""),
+        _ignore: false,
+    }
+    
+    const t = column.type.toLowerCase()
+    if (t === "serial") {
+        c.data_type = "integer"
+        c._ignore = true
+    } else if (t.match(/^varchar\((\d+)\)/)) {
+        c.data_type = "character varying"
+        c.character_maximum_length = parseInt(t.match(/^varchar\((\d+)\)/)[1])
+    }
+
+    return c
+}
+
+/**
+ */
+const _fix = _.promise.make((self, done) => {
+    const method = "create/_fix";
+
+    self.postgres.client.query(`
+select column_name, data_type, character_maximum_length
+from INFORMATION_SCHEMA.COLUMNS where table_name = 'items';
+`)
+        .then(result => {
+            self.rowd = {}
+
+            result.rows.forEach(row => {
+                self.rowd[row.column_name] = Object.assign({}, row)
+            })
+
+            let columns = self.table_schema.columns.map(_normalize);
+            columns.forEach(column => {
+                if (column._ignore) {
+                    column._action = null
+                } else if (self.rowd[column.column_name]) {
+                    column._action = `ALTER ${column._name} TYPE ${column._type}`
+                } else {
+                    column._action = `ADD ${column._name} ${column._type}`
+                }
+            })
+
+            columns = columns.filter(column => column._action)
+            if (columns.length === 0) {
+                return done(null, self)
+            }
+            
+            const statement = `ALTER TABLE ${self.table_schema.name}\n\t${columns.map(c => c._action).join(",\n\t")}`
+            logger.debug({
+                method: method,
+                statement: statement,
+            }, "upgrading existing table")
+
+            self.postgres.client.query(statement)
+                .then(result => {
+                    self.postgres_result = result;
+                    done(null, self)
+                })
+                .catch(done)
+        })
+        .catch(done)
+})
 
 /*
  *  Requires: self.postgres, self.table_schema
@@ -52,19 +124,35 @@ const create = dry_run => _.promise.make((self, done) => {
 
     self.postgres_statement = statement
     self.postgres_params = null
+    self.postgres_result = null
 
     if (dry_run) {
-        self.postgres_result = null
-
         return done(null, self)
     }
 
-    self.postgres.client.query(statement)
-        .then(result => {
-            self.postgres_result = result;
+    const _create = _.promise.make((self, done) => {
+        self.postgres.client.query(statement)
+            .then(result => {
+                self.postgres_result = result;
+                done(null, self)
+            })
+            .catch(done)
+    })
 
-            done(null, self)
+    _.promise.make(self)
+        .then(_create)
+        .then(_.promise.bail)
+        .catch(error => {
+            if (error.code !== "42P07") {
+                throw error
+            }
+
+            return self
         })
+        .then(_fix)
+
+        .catch(_.promise.unbail)
+        .then(_.promise.done(done, self, "postgres_result"))
         .catch(done)
 })
 

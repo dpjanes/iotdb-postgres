@@ -1,0 +1,24 @@
+{
+    "name": "items",
+    "keys": [
+        "id"
+    ],
+    "columns": [
+        {
+            "name": "id",
+            "type": "SERIAL"
+        },
+        {
+            "name": "text",
+            "type": "VARCHAR(40) NOT NULL"
+        },
+        {
+            "name": "complete",
+            "type": "BOOLEAN"
+        },
+        {
+            "name": "new_field",
+            "type": "INTEGER"
+        }
+    ]
+}
