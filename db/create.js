@@ -39,11 +39,13 @@ const _normalize = column => {
         _type: column.type.replace(/ .*$/, ""),
         _ignore: false,
     }
-    
+
     const t = column.type.toLowerCase()
     if (t === "serial") {
         c.data_type = "integer"
         c._ignore = true
+    } else if (t === "double precision") {
+        c._type = "double precision" // because of the space hack above
     } else if (t.match(/^varchar\((\d+)\)/)) {
         c.data_type = "character varying"
         c.character_maximum_length = parseInt(t.match(/^varchar\((\d+)\)/)[1])
