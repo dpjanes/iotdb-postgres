@@ -107,6 +107,23 @@ from INFORMATION_SCHEMA.COLUMNS where table_name = '${self.table_schema.name}';
         .catch(done)
 })
 
+const _create_index = _.promise.make((self, done) => {
+    const statement = `CREATE INDEX ${self.id.name} ON ${self.table_schema.name} (${self.id.columns.join(",")})`
+    console.log("HERE:XXX", self.id, statement)
+
+    self.postgres.client.query(statement)
+        .then(result => {
+            done(null, self)
+        })
+        .catch(error => {
+            if (error.code === '42P07') {
+                return done(null, self)
+            } else {
+                return done(error)
+            }
+        })
+})
+
 /*
  *  Requires: self.postgres, self.table_schema
  *  Produces: self.postgres_result
@@ -137,7 +154,7 @@ const create = dry_run => _.promise.make((self, done) => {
         return done(null, self)
     }
 
-    const _create = _.promise.make((self, done) => {
+    const _create_table = _.promise.make((self, done) => {
         self.postgres.client.query(statement)
             .then(result => {
                 self.postgres_result = result;
@@ -146,10 +163,18 @@ const create = dry_run => _.promise.make((self, done) => {
             .catch(done)
     })
 
-    _.promise.make(self)
-        .then(_create)
+    const ids = [];
+    _.mapObject(self.table_schema.indexes || {}, (columns, name) => {
+        ids.push({
+            name: name,
+            columns: columns,
+        })
+    })
+
+    _.promise(self)
+        .then(_create_table)
         .then(_.promise.bail)
-        .catch(error => {
+        .except(error => {
             if (error.code !== "42P07") {
                 throw error
             }
@@ -158,9 +183,14 @@ const create = dry_run => _.promise.make((self, done) => {
         })
         .then(_fix)
 
-        .catch(_.promise.unbail)
-        .then(_.promise.done(done, self, "postgres_result"))
-        .catch(done)
+        .except(_.promise.unbail)
+        .add("ids", ids)
+        .each({
+            method: _create_index,
+            inputs: "ids:id",
+        })
+
+        .end(done, self, "postgres_result")
 })
 
 /**
