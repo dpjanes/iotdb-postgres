@@ -109,7 +109,6 @@ from INFORMATION_SCHEMA.COLUMNS where table_name = '${self.table_schema.name}';
 
 const _create_index = _.promise.make((self, done) => {
     const statement = `CREATE INDEX ${self.id.name} ON ${self.table_schema.name} (${self.id.columns.join(",")})`
-    console.log("HERE:XXX", self.id, statement)
 
     self.postgres.client.query(statement)
         .then(result => {
