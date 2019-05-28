@@ -56,7 +56,7 @@ const _normalize = column => {
 
 /**
  */
-const _fix = _.promise.make((self, done) => {
+const _fix = _.promise((self, done) => {
     const method = "create/_fix";
 
     self.postgres.client.query(`
@@ -107,7 +107,7 @@ from INFORMATION_SCHEMA.COLUMNS where table_name = '${self.table_schema.name}';
         .catch(done)
 })
 
-const _create_index = _.promise.make((self, done) => {
+const _create_index = _.promise((self, done) => {
     const statement = `CREATE INDEX ${self.id.name} ON ${self.table_schema.name} (${self.id.columns.join(",")})`
 
     self.postgres.client.query(statement)
@@ -129,7 +129,7 @@ const _create_index = _.promise.make((self, done) => {
  *
  *  Create a Postgres Table
  */
-const create = dry_run => _.promise.make((self, done) => {
+const create = dry_run => _.promise((self, done) => {
     const method = "create";
 
     assert.ok(self.postgres, `${method}: expected self.postgres`)
@@ -153,7 +153,7 @@ const create = dry_run => _.promise.make((self, done) => {
         return done(null, self)
     }
 
-    const _create_table = _.promise.make((self, done) => {
+    const _create_table = _.promise((self, done) => {
         self.postgres.client.query(statement)
             .then(result => {
                 self.postgres_result = result;
@@ -181,6 +181,22 @@ const create = dry_run => _.promise.make((self, done) => {
             return self
         })
         .then(_fix)
+        .except(error => {
+            if (error.code !== "0A000") {
+                throw error
+            }
+
+            logger.warn({
+                method: method,
+                table: self.table_schema.name,
+                error: {
+                    code: error.code,
+                    message: error.message,
+                },
+            }, "ignoring this error but you may have an issue!!")
+
+            return self
+        })
 
         .except(_.promise.unbail)
         .add("ids", ids)
