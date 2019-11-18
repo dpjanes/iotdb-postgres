@@ -4,8 +4,8 @@
         "url": "https://github.com/dpjanes/iotdb-postgres/issues"
     }, 
     "dependencies": {
-        "iotdb-helpers": "~3.3.9", 
-        "pg": "~7.11.0"
+        "iotdb-helpers": "~3.4.2", 
+        "pg": "~7.12.1"
     }, 
     "description": "Pipe Oriented Programming", 
     "homepage": "https://github.com/dpjanes/node-iotdb", 
