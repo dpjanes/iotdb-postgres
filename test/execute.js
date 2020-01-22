@@ -33,10 +33,10 @@ describe("execute", function() {
     let self = {}
 
     before(function(done) {
-        _.promise.make(self)
+        _.promise(self)
             .then(_util.initialize)
             // .then(_util.load)
-            .then(_.promise.make(sd => {
+            .then(_.promise(sd => {
                 self = sd;
             }))
             .then(_.promise.done(done))
@@ -45,12 +45,12 @@ describe("execute", function() {
 
     describe("good", function() {
         it("works", function(done) {
-            _.promise.make(self)
+            _.promise(self)
                 .then(_.promise.optional(postgres.execute.p("DROP TABLE items")))
                 .then(postgres.execute.p("CREATE TABLE items(id SERIAL PRIMARY KEY, text VARCHAR(40) not null, complete BOOLEAN)"))
                 .then(postgres.execute.p("INSERT INTO items(text, complete) values($1, $2)", [ "hello", true ]))
                 .then(postgres.execute.p("SELECT * FROM items"))
-                .then(_.promise.make(sd => {
+                .then(_.promise(sd => {
                     assert.ok(sd.jsons)
                     assert.ok(sd.json)
                     assert.deepEqual(sd.jsons.length, 1)

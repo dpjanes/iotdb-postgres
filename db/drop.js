@@ -34,7 +34,7 @@ const assert = require("assert");
  *
  *  Drop a Postgres Table
  */
-const drop = _.promise.make((self, done) => {
+const drop = _.promise((self, done) => {
     const method = "drop";
 
     assert.ok(self.postgres, `${method}: expected self.postgres`)

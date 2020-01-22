@@ -33,10 +33,10 @@ describe("initialize", function() {
     let self = {}
 
     before(function(done) {
-        _.promise.make(self)
+        _.promise(self)
             .then(_util.initialize)
             // .then(_util.load)
-            .then(_.promise.make(sd => {
+            .then(_.promise(sd => {
                 self = sd;
             }))
             .then(_.promise.done(done))
@@ -45,8 +45,8 @@ describe("initialize", function() {
 
     describe("good", function() {
         it("works", function(done) {
-            _.promise.make(self)
-                .then(_.promise.make(sd => {
+            _.promise(self)
+                .then(_.promise(sd => {
                     assert.ok(sd.postgres)
                 }))
                 .then(_.promise.done(done))

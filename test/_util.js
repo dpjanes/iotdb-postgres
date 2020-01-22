@@ -29,7 +29,7 @@ const path = require("path");
 
 const postgres = require("..")
 
-const auto_fail = done => _.promise.make(self => done(new Error("didn't expect to get here")));
+const auto_fail = done => _.promise(self => done(new Error("didn't expect to get here")));
 const ok_error = (done, code) => error => {
     if (code && (_.error.code(error) !== code)) {
         return done(error)
@@ -41,8 +41,8 @@ const ok_error = (done, code) => error => {
 /**
  *  Standard connection
  */
-const initialize = _.promise.make((self, done) => {
-    _.promise.make(self)
+const initialize = _.promise((self, done) => {
+    _.promise(self)
         .then(_.promise.add("postgresd", {
             "url": "postgres://localhost:5432/david",
         }))

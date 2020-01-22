@@ -57,23 +57,23 @@ if (ad.help) {
     help("<path> is required")
 }
 
-const _do_table = _.promise.make((self, done) => {
+const _do_table = _.promise((self, done) => {
     assert.ok(self.path)
     assert.ok(self.postgres)
 
-    _.promise.make(self)
+    _.promise(self)
         .then(fs.read.json)
         .then(_.promise.add("json:table_schema"))
         .then(_.promise.conditional(self.do_drop, _.promise.optional(postgres.db.drop)))
         .then(postgres.db.create)
-        .then(_.promise.make(sd => {
+        .then(_.promise(sd => {
             console.log("+", "made", sd.table_schema.name)
         }))
         .then(_.promise.done(done, self))
         .catch(done)
 })
 
-_.promise.make({
+_.promise({
     postgresd: {
         url: ad.db,
     },
