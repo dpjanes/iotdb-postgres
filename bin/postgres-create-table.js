@@ -20,20 +20,20 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
+const _ = require("iotdb-helpers")
 const fs = require("iotdb-fs")
 
-const assert = require("assert");
-const path = require("path");
+const assert = require("assert")
+const path = require("path")
 
 const postgres = require("..")
 
-const minimist = require('minimist');
+const minimist = require('minimist')
 const ad = minimist(process.argv.slice(2), {
     boolean: [ "verbose", "help", "drop", "error", ],
-});
+})
 
 const help = message => {
     if (message) {
@@ -87,7 +87,7 @@ _.promise({
         inputs: "paths:path",
     }))
     .catch(error => {
-        delete error.self;
+        delete error.self
         console.log("#", _.error.message(error))
 
         if (ad.error) {

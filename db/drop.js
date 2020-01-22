@@ -20,13 +20,13 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
+const _ = require("iotdb-helpers")
 
-const postgres = require("pg");
+const postgres = require("pg")
 
-const assert = require("assert");
+const assert = require("assert")
 
 /*
  *  Requires: self.postgres, self.table_schema
@@ -35,18 +35,18 @@ const assert = require("assert");
  *  Drop a Postgres Table
  */
 const drop = _.promise((self, done) => {
-    const method = "drop";
+    const method = "drop"
 
     assert.ok(self.postgres, `${method}: expected self.postgres`)
     assert.ok(self.postgres.client, `${method}: expected self.postgres.client`)
     assert.ok(self.table_schema, `${method}: expected self.table_schema`)
     assert.ok(self.table_schema.name, `${method}: expected self.table_schema.name`)
 
-    const statement = `DROP TABLE ${self.table_schema.name}`;
+    const statement = `DROP TABLE ${self.table_schema.name}`
 
     self.postgres.client.query(statement)
         .then(result => {
-            self.postgres_result = result;
+            self.postgres_result = result
 
             done(null, self)
         })
@@ -56,4 +56,4 @@ const drop = _.promise((self, done) => {
 /**
  *  API
  */
-exports.drop = drop;
+exports.drop = drop

@@ -20,11 +20,11 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
+const _ = require("iotdb-helpers")
 
-const assert = require("assert");
+const assert = require("assert")
 
 const postgres = require("..")
 const _util = require("./_util")
@@ -37,7 +37,7 @@ describe("initialize", function() {
             .then(_util.initialize)
             // .then(_util.load)
             .then(_.promise(sd => {
-                self = sd;
+                self = sd
             }))
             .then(_.promise.done(done))
             .catch(done)

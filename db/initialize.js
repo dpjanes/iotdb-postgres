@@ -20,19 +20,19 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
+const _ = require("iotdb-helpers")
 
-const postgres = require("pg");
+const postgres = require("pg")
 
-const assert = require("assert");
+const assert = require("assert")
 
 /**
  *  Currently does nothing, but call me anyway
  */
 const initialize = _.promise((self, done) => {
-    const method = "initialize";
+    const method = "initialize"
 
     done(null, self)
 })
@@ -40,4 +40,4 @@ const initialize = _.promise((self, done) => {
 /**
  *  API
  */
-exports.initialize = initialize;
+exports.initialize = initialize

@@ -20,22 +20,22 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
+const _ = require("iotdb-helpers")
 
-const assert = require("assert");
-const path = require("path");
+const assert = require("assert")
+const path = require("path")
 
 const postgres = require("..")
 
-const auto_fail = done => _.promise(self => done(new Error("didn't expect to get here")));
+const auto_fail = done => _.promise(self => done(new Error("didn't expect to get here")))
 const ok_error = (done, code) => error => {
     if (code && (_.error.code(error) !== code)) {
         return done(error)
     }
 
-    done(null);
+    done(null)
 }
 
 /**
@@ -55,7 +55,7 @@ const initialize = _.promise((self, done) => {
 /**
  *  API
  */
-exports.auto_fail = auto_fail;
-exports.ok_error = ok_error;
+exports.auto_fail = auto_fail
+exports.ok_error = ok_error
 
-exports.initialize = initialize;
+exports.initialize = initialize

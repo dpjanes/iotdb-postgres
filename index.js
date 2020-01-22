@@ -20,8 +20,8 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-module.exports = require("./lib");
-module.exports.db = require("./db");
-module.exports.dynamodb = module.exports.db;
+module.exports = require("./lib")
+module.exports.db = require("./db")
+module.exports.dynamodb = module.exports.db
