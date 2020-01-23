@@ -43,7 +43,7 @@ const ok_error = (done, code) => error => {
  */
 const initialize = _.promise((self, done) => {
     _.promise(self)
-        .then(_.promise.add("postgresd", {
+        .then(_.promise.add("postgres$cfg", {
             "url": "postgres://localhost:5432/david",
         }))
         .then(postgres.initialize)

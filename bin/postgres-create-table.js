@@ -74,7 +74,7 @@ const _do_table = _.promise((self, done) => {
 })
 
 _.promise({
-    postgresd: {
+    postgres$cfg: {
         url: ad.db,
     },
     verbose: ad.verbose,
