@@ -24,8 +24,6 @@
 
 const _ = require("iotdb-helpers")
 
-const assert = require("assert")
-
 const logger = require("../logger")(__filename)
 
 /**
@@ -57,7 +55,7 @@ const _normalize = column => {
 /**
  */
 const _fix = _.promise((self, done) => {
-    const method = "create/_fix";
+    _.promise.validate(self, _fix)
 
     self.postgres.client.query(`
 select column_name, data_type, character_maximum_length
@@ -93,7 +91,7 @@ from INFORMATION_SCHEMA.COLUMNS where table_name = '${self.table_schema.name}';
             
             const statement = `ALTER TABLE ${self.table_schema.name}\n\t${columns.map(c => c._action).join(",\n\t")}`
             logger.debug({
-                method: method,
+                method: _fix.method,
                 statement: statement,
             }, "upgrading existing table")
 
@@ -107,7 +105,22 @@ from INFORMATION_SCHEMA.COLUMNS where table_name = '${self.table_schema.name}';
         .catch(done)
 })
 
+_fix.method = "db.create/_fix"
+_fix.requires = {
+    postgres: {
+        client: _.is.Object,
+    },
+    table_schema: {
+        name: _.is.String,
+        keys: _.is.Array,
+    },
+}
+
+/**
+ */
 const _create_index = _.promise((self, done) => {
+    _.promise.validate(self, _create_index)
+
     const statement = `CREATE INDEX ${self.id.name} ON ${self.table_schema.name} (${self.id.columns.join(",")})`
 
     self.postgres.client.query(statement)
@@ -123,21 +136,21 @@ const _create_index = _.promise((self, done) => {
         })
 })
 
+_create_index.method = "db._create_index/_create_index"
+_create_index.requires = {
+    postgres: {
+        client: _.is.Object,
+    },
+    table_schema: {
+        name: _.is.String,
+        keys: _.is.Array,
+    },
+}
+
 /*
- *  Requires: self.postgres, self.table_schema
- *  Produces: self.postgres_result
- *
- *  Create a Postgres Table
  */
 const create = dry_run => _.promise((self, done) => {
-    const method = "create";
-
-    assert.ok(self.postgres, `${method}: expected self.postgres`)
-    assert.ok(self.postgres.client, `${method}: expected self.postgres.client`)
-    assert.ok(self.table_schema, `${method}: expected self.table_schema`)
-    assert.ok(self.table_schema.name, `${method}: expected self.table_schema.name`)
-    assert.ok(self.table_schema.keys, `${method}: expected self.table_schema.keys`)
-    assert.ok(self.table_schema.keys.length, `${method}: expected self.table_schema.keys`)
+    _.promise.validate(self, create)
 
     const columns = (self.table_schema.columns || []).map(cd => `${cd.name} ${cd.type}`);
 
@@ -187,7 +200,7 @@ const create = dry_run => _.promise((self, done) => {
             }
 
             logger.warn({
-                method: method,
+                method: create.method,
                 table: self.table_schema.name,
                 error: {
                     code: error.code,
@@ -208,8 +221,25 @@ const create = dry_run => _.promise((self, done) => {
         .end(done, self, "postgres_result")
 })
 
+create.method = "db.create"
+create.description = `Create a Postgres table from table_schema`
+create.requires = {
+    postgres: {
+        client: _.is.Object,
+    },
+    table_schema: {
+        name: _.is.String,
+        keys: _.is.Array,
+    },
+}
+create.accepts = {
+}
+create.produces = {
+    postgres_result: _.is.Object,
+}
+
 /**
  *  API
  */
-exports.create = create(false);
-exports.create.dry_run = create(true);
+exports.create = create(false)
+exports.create.dry_run = create(true)

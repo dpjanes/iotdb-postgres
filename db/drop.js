@@ -26,21 +26,10 @@ const _ = require("iotdb-helpers")
 
 const postgres = require("pg")
 
-const assert = require("assert")
-
 /*
- *  Requires: self.postgres, self.table_schema
- *  Produces: self.postgres_result
- *
- *  Drop a Postgres Table
  */
 const drop = _.promise((self, done) => {
-    const method = "drop"
-
-    assert.ok(self.postgres, `${method}: expected self.postgres`)
-    assert.ok(self.postgres.client, `${method}: expected self.postgres.client`)
-    assert.ok(self.table_schema, `${method}: expected self.table_schema`)
-    assert.ok(self.table_schema.name, `${method}: expected self.table_schema.name`)
+    _.promise.validate(self, drop)
 
     const statement = `DROP TABLE ${self.table_schema.name}`
 
@@ -52,6 +41,21 @@ const drop = _.promise((self, done) => {
         })
         .catch(done)
 })
+
+drop.method = "db.drop"
+drop.description = `Drop a Postgres table described by table_schema`
+drop.requires = {
+    postgres: {
+        client: _.is.Object,
+    },
+    table_schema: {
+        name: _.is.String,
+    },
+}
+drop.accepts = {
+}
+drop.produces = {
+}
 
 /**
  *  API
