@@ -54,7 +54,7 @@ describe("db/create", function() {
                 .then(_.promise.add("json:table_schema"))
                 .then(postgres.db.create)
                 .then(_.promise(sd => {
-                    assert.deepEqual(sd.postgres_result.command, "CREATE")
+                    assert.deepEqual(sd.postgres$result.command, "CREATE")
                 }))
                 .then(_.promise.done(done))
                 .catch(done)
@@ -68,7 +68,7 @@ describe("db/create", function() {
                 .then(_.promise.add("json:table_schema"))
                 .then(postgres.db.create)
                 .then(_.promise(sd => {
-                    assert.deepEqual(sd.postgres_result.command, "CREATE")
+                    assert.deepEqual(sd.postgres$result.command, "CREATE")
                 }))
                 .then(_.promise.done(done))
                 .catch(done)
@@ -88,7 +88,7 @@ describe("db/create", function() {
                 .then(postgres.db.create)
 
                 .then(_.promise(sd => {
-                    // assert.deepEqual(sd.postgres_result.command, "CREATE")
+                    // assert.deepEqual(sd.postgres$result.command, "CREATE")
                 }))
                 .then(_.promise.done(done))
                 .catch(done)
@@ -104,7 +104,7 @@ describe("db/create", function() {
                 .then(postgres.db.create)
 
                 .then(_.promise(sd => {
-                    // assert.deepEqual(sd.postgres_result.command, "CREATE")
+                    // assert.deepEqual(sd.postgres$result.command, "CREATE")
                 }))
                 .then(_.promise.done(done))
                 .catch(done)

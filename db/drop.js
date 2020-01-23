@@ -35,7 +35,7 @@ const drop = _.promise((self, done) => {
 
     self.postgres.client.query(statement)
         .then(result => {
-            self.postgres_result = result
+            self.postgres$result = result
 
             done(null, self)
         })

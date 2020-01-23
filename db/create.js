@@ -97,7 +97,7 @@ from INFORMATION_SCHEMA.COLUMNS where table_name = '${self.table_schema.name}';
 
             self.postgres.client.query(statement)
                 .then(result => {
-                    self.postgres_result = result;
+                    self.postgres$result = result;
                     done(null, self)
                 })
                 .catch(done)
@@ -160,7 +160,7 @@ const create = dry_run => _.promise((self, done) => {
 
     self.postgres_statement = statement
     self.postgres_params = null
-    self.postgres_result = null
+    self.postgres$result = null
 
     if (dry_run) {
         return done(null, self)
@@ -169,7 +169,7 @@ const create = dry_run => _.promise((self, done) => {
     const _create_table = _.promise((self, done) => {
         self.postgres.client.query(statement)
             .then(result => {
-                self.postgres_result = result;
+                self.postgres$result = result;
                 done(null, self)
             })
             .catch(done)
@@ -218,7 +218,7 @@ const create = dry_run => _.promise((self, done) => {
             inputs: "ids:id",
         })
 
-        .end(done, self, "postgres_result")
+        .end(done, self, "postgres$result")
 })
 
 create.method = "db.create"
@@ -235,7 +235,7 @@ create.requires = {
 create.accepts = {
 }
 create.produces = {
-    postgres_result: _.is.Object,
+    postgres$result: _.is.Object,
 }
 
 /**
