@@ -4,8 +4,8 @@
         "url": "https://github.com/dpjanes/iotdb-postgres/issues"
     }, 
     "dependencies": {
-        "iotdb-helpers": "~3.5.1", 
-        "pg": "~7.17.1"
+        "iotdb-helpers": "~3.5.2", 
+        "pg": "~8.5.1"
     }, 
     "description": "Pipe Oriented Programming", 
     "homepage": "https://github.com/dpjanes/node-iotdb", 
@@ -21,5 +21,5 @@
         "cover": "nyc --reporter=html mocha --recursive", 
         "test": "mocha --recursive --bail"
     }, 
-    "version": "2.0.4"
+    "version": "2.0.5"
 }
